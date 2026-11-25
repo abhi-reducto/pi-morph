@@ -22,6 +22,8 @@ Enables `/login morph` in Pi and exposes Morph's OpenAI-compatible open-source c
 pi install git:github.com/abhi-reducto/pi-morph
 ```
 
+The package declares `@earendil-works/pi-ai` as an optional dependency so it can import the OpenAI completions API implementation; Pi supplies the host copy at runtime.
+
 ## Auth
 
 Get an API key from [morphllm.com/dashboard/api-keys](https://www.morphllm.com/dashboard/api-keys), then run:
