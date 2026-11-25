@@ -3,9 +3,8 @@
  * OpenAI-compatible chat models.
  */
 
+import { createProvider, envApiKeyAuth, openAICompletionsApi } from "@earendil-works/pi-ai/compat";
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
-import { createProvider, envApiKeyAuth } from "@earendil-works/pi-ai";
-import { openAICompletionsApi } from "@earendil-works/pi-ai/api/openai-completions.lazy";
 
 const THINKING_LEVEL_MAP = {
   off: "none",
@@ -30,7 +29,7 @@ function chat(model: {
     id: model.id,
     name: model.name,
     provider: "morph",
-    api: "openai-completions",
+    api: "openai-completions" as const,
     baseUrl: "https://api.morphllm.com/v1",
     reasoning: model.reasoning ?? true,
     input: model.input,
@@ -46,7 +45,7 @@ function chat(model: {
     compat: {
       supportsStore: false,
       supportsReasoningEffort: true,
-      maxTokensField: "max_tokens",
+      maxTokensField: "max_tokens" as const,
     },
   };
 }
@@ -151,6 +150,6 @@ export default function (pi: ExtensionAPI) {
         }),
       ],
       api: openAICompletionsApi(),
-    })
+    }),
   );
 }
