@@ -1,0 +1,23 @@
+{
+  "name": "pi-morph",
+  "version": "1.0.0",
+  "description": "Morph provider for Pi — enables /login morph and exposes Morph's open-source coding models.",
+  "keywords": [
+    "pi-package"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/abhi-reducto/pi-morph.git"
+  },
+  "type": "module",
+  "pi": {
+    "extensions": [
+      "./extensions/morph.ts"
+    ]
+  },
+  "peerDependencies": {
+    "@earendil-works/pi-ai": "*",
+    "@earendil-works/pi-coding-agent": "*"
+  }
+}
