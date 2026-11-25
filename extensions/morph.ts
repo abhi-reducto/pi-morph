@@ -1,10 +1,14 @@
 /**
- * Morph provider extension — enables `/login morph` and registers Morph's
- * OpenAI-compatible chat models.
+ * Morph provider extension — enables `/login morph`, registers Morph's
+ * OpenAI-compatible chat models, and installs a colored single-line footer
+ * when a Morph model is active.
  */
 
 import { createProvider, envApiKeyAuth, openAICompletionsApi } from "@earendil-works/pi-ai/compat";
-import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
+import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
+import { installMorphFooter } from "../src/footer.js";
+
+const PROVIDER_ID = "morph";
 
 const THINKING_LEVEL_MAP = {
   off: "none",
@@ -28,7 +32,7 @@ function chat(model: {
   return {
     id: model.id,
     name: model.name,
-    provider: "morph",
+    provider: PROVIDER_ID,
     api: "openai-completions" as const,
     baseUrl: "https://api.morphllm.com/v1",
     reasoning: model.reasoning ?? true,
@@ -51,9 +55,25 @@ function chat(model: {
 }
 
 export default function (pi: ExtensionAPI) {
+  let footerHandle: { requestRender: () => void } | undefined;
+
+  const syncFooter = (ctx: ExtensionContext): void => {
+    if (!ctx.hasUI) return;
+    if (ctx.model?.provider === PROVIDER_ID) {
+      if (!footerHandle) {
+        footerHandle = installMorphFooter(pi, ctx);
+      } else {
+        footerHandle.requestRender();
+      }
+    } else if (footerHandle) {
+      ctx.ui.setFooter(undefined);
+      footerHandle = undefined;
+    }
+  };
+
   pi.registerProvider(
     createProvider({
-      id: "morph",
+      id: PROVIDER_ID,
       name: "Morph",
       baseUrl: "https://api.morphllm.com/v1",
       auth: {
@@ -152,4 +172,17 @@ export default function (pi: ExtensionAPI) {
       api: openAICompletionsApi(),
     }),
   );
+
+  pi.on("session_start", (_event, ctx) => {
+    footerHandle = undefined;
+    syncFooter(ctx);
+  });
+
+  pi.on("model_select", (_event, ctx) => {
+    syncFooter(ctx);
+  });
+
+  pi.on("agent_end", (_event, ctx) => {
+    footerHandle?.requestRender();
+  });
 }
