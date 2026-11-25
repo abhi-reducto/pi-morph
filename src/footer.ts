@@ -168,7 +168,8 @@ function formatModelRight(meta: FooterRightMeta, theme: StatusTheme): string {
   if (meta.showProvider && meta.provider) {
     pieces.push(theme.fg("muted", `(${meta.provider})`));
   }
-  pieces.push(theme.bold(theme.fg("accent", meta.modelId)));
+  const modelColor: StatusColor = meta.modelId.includes("abliterated") ? "error" : "accent";
+  pieces.push(theme.bold(theme.fg(modelColor, meta.modelId)));
   if (meta.thinkingLevel) {
     const color = THINKING_COLOR[meta.thinkingLevel] ?? "muted";
     const label = meta.thinkingLevel === "off" ? "thinking off" : meta.thinkingLevel;
