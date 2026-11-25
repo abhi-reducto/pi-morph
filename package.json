@@ -1,6 +1,6 @@
 {
   "name": "pi-morph",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Morph provider for Pi — enables /login morph and exposes Morph's open-source coding models.",
   "keywords": [
     "pi-package"
@@ -19,5 +19,8 @@
   "peerDependencies": {
     "@earendil-works/pi-ai": "*",
     "@earendil-works/pi-coding-agent": "*"
+  },
+  "dependencies": {
+    "@earendil-works/pi-ai": "^1.6.1"
   }
 }
